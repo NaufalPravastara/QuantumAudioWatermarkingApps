@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "526842564345",
+    "firebase_url": "https://taproject-35eab-default-rtdb.firebaseio.com",
+    "project_id": "taproject-35eab",
+    "storage_bucket": "taproject-35eab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526842564345:android:f0881f854d7fdd6583dc28",
+        "android_client_info": {
+          "package_name": "com.example.ta_capstone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526842564345-ijkdiqtscbql3oegbiiv1lu0t5qbguej.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ta_capstone",
+            "certificate_hash": "842141d7d3fe87fb2b4dbf9be910e8f90650c632"
+          }
+        },
+        {
+          "client_id": "526842564345-o6pgk6kstlgej3iqla6vv4cj8iado42j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHlYfyJIyqboDt7E7U7EjqNacWidLs7vk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526842564345-o6pgk6kstlgej3iqla6vv4cj8iado42j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

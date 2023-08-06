@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:ta_capstone/screens/dasar_teori/lsb/details_lsb.dart';
+import 'package:ta_capstone/screens/dasar_teori/lsb/quiz_lsb.dart';
+
+class MenuLsb extends StatefulWidget {
+  const MenuLsb({Key? key}) : super(key: key);
+
+  @override
+  State<MenuLsb> createState() => _MenuLsbState();
+}
+
+class _MenuLsbState extends State<MenuLsb> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "qLSB",
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF93deff),
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
+      ),
+      backgroundColor: Colors.transparent,
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/wallpaper.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: InkWell(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailLSB(),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: const [
+                        Image(
+                          image: AssetImage("assets/images/teori.png"),
+                          height: 100,
+                          width: 100,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Lihat Materi",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFF7F7F7),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: InkWell(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuizLsb(),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: const [
+                        Image(
+                          image: AssetImage("assets/images/quiz.png"),
+                          height: 100,
+                          width: 100,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Quiz",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFF7F7F7),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
