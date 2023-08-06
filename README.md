@@ -1,4 +1,4 @@
-# ta_capstone
+# Quantum Audio Watermarking Application
 
 A new Flutter project.
 
