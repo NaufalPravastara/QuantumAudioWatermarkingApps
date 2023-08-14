@@ -24,6 +24,13 @@ class _EmbeddingPageState extends State<EmbeddingPage> {
   PlatformFile? pickedFile1;
   PlatformFile? pickedFile2;
   UploadTask? uploadTask;
+  List<String> dropdownItems1 = ['4', '6', '8'];
+  List<String> dropdownItems2 = [
+    '10.000',
+    '20.000',
+  ];
+  String? watermarkType1;
+  String? watermarkType2;
   String? selectedItem;
   String? selectedEmbeddingMethod;
   bool isLoading = false;
@@ -32,9 +39,17 @@ class _EmbeddingPageState extends State<EmbeddingPage> {
   bool showLoading = false;
   bool isKeyVisible = false;
 
+  Map<String, String> dropdownMapping1 = {'4': '4', '6': '6', '8': '8'};
+  Map<String, String> dropdownMapping2 = {
+    '10.000': '1',
+    '20.000': '2',
+  };
+
   Future uploadFiles() async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     final inputKey = controller.text.trim();
+    final newName1 = dropdownMapping1[watermarkType1];
+    final newName2 = dropdownMapping2[watermarkType2];
     final timestamp = DateTime.now().microsecondsSinceEpoch;
     final DateTime dateTime = DateTime.fromMicrosecondsSinceEpoch(timestamp);
     final year = dateTime.year;
@@ -49,13 +64,15 @@ class _EmbeddingPageState extends State<EmbeddingPage> {
 
     if (pickedFile1 == null ||
         pickedFile2 == null ||
-        selectedEmbeddingMethod == null) {
+        selectedEmbeddingMethod == null ||
+        watermarkType1 == null ||
+        watermarkType2 == null) {
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             content: const Text(
-                "Pilih Metode, Audio Host, dan Citra Watermark terlebih dahulu"),
+                "Pilih Metode, Audio Host, Citra Watermark, Nilai N dan Ns terlebih dahulu"),
             actions: [
               TextButton(
                 onPressed: () {
@@ -95,11 +112,11 @@ class _EmbeddingPageState extends State<EmbeddingPage> {
     });
 
     final path1 =
-        'audio-host/${userId}_${selectedEmbeddingMethod}_host_$timestamp.${pickedFile1!.extension}';
+        'audio-host/${userId}_${selectedEmbeddingMethod}_${newName1}_${newName2}_host_$timestamp.${pickedFile1!.extension}';
     final file1 = File(pickedFile1!.path!);
 
     final path2 =
-        'citra-watermark/${userId}_${selectedEmbeddingMethod}_watermark_$timestamp.${pickedFile2!.extension}';
+        'citra-watermark/${userId}_${selectedEmbeddingMethod}_${newName1}_${newName2}_watermark_$timestamp.${pickedFile2!.extension}';
     final file2 = File(pickedFile2!.path!);
 
     final ref1 = FirebaseStorage.instance.ref().child(path1);
@@ -121,15 +138,17 @@ class _EmbeddingPageState extends State<EmbeddingPage> {
 
     final databaseReference = FirebaseDatabase.instance.ref();
     final hostFile =
-        '${userId}_${selectedEmbeddingMethod}_host_$timestamp.${pickedFile1!.extension}';
+        '${userId}_${selectedEmbeddingMethod}_${newName1}_${newName2}_host_$timestamp.${pickedFile1!.extension}';
     const hostPath = 'audio-host/';
 
     final watermarkFile =
-        '${userId}_${selectedEmbeddingMethod}_watermark_$timestamp.${pickedFile2!.extension}';
+        '${userId}_${selectedEmbeddingMethod}_${newName1}_${newName2}_watermark_$timestamp.${pickedFile2!.extension}';
     const watermarkPath = 'citra-watermark/';
 
     await databaseReference.child('file_host').child('$timestamp').set({
       'key': inputKey,
+      'n': newName1,
+      'ns': newName2,
       'metode': selectedEmbeddingMethod,
       'nama_file': hostFile,
       'path_file': hostPath,
@@ -140,6 +159,8 @@ class _EmbeddingPageState extends State<EmbeddingPage> {
 
     await databaseReference.child('file_watermark').child('$timestamp').set({
       'key': inputKey,
+      'n': newName1,
+      'ns': newName2,
       'metode': selectedEmbeddingMethod,
       'nama_file': watermarkFile,
       'path_file': watermarkPath,
@@ -152,11 +173,13 @@ class _EmbeddingPageState extends State<EmbeddingPage> {
       pickedFile1 = null;
       pickedFile2 = null;
       selectedEmbeddingMethod = null;
+      watermarkType1 = null;
+      watermarkType2 = null;
     });
 
     controller.text = '';
 
-    const loadingDuration = Duration(seconds: 40);
+    const loadingDuration = Duration(seconds: 20);
     Timer(loadingDuration, () {
       setState(() {
         showLoading = false;
@@ -174,6 +197,8 @@ class _EmbeddingPageState extends State<EmbeddingPage> {
 
     setState(() {
       pickedFile1 = result.files.first;
+      watermarkType1 = null;
+      watermarkType2 = null;
       isFileSelected1 = true;
     });
   }
@@ -249,7 +274,7 @@ class _EmbeddingPageState extends State<EmbeddingPage> {
                 child: const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Proses embedding adalah proses penyisipan citra watermark terhadap audio host. Pada aplikasi ini audio host akan dipotong menjadi 3,5 detik dan citra watermark diubah menjadi citra BW (black-white) dengan ukuran 200x200. Data tersebut yang akan digunakan pada proses embedding.",
+                    "Proses embedding adalah proses penyisipan citra watermark terhadap audio host. Pada aplikasi ini audio host akan dipotong menjadi 3,5 detik dan citra watermark diubah menjadi citra BW (black-white) dengan ukuran 200x200. Data tersebut yang akan digunakan pada proses embedding. Panjang Bit Kuantum adalah bit yang digunakan untuk normalisasi audio. Metode qLSB memiliki waktu pemrosesan watermarking lebih cepat dibandingkan dengan qDCT dan qWavelet. Sedangkan untuk qDCT dan qWavelet memiliki waktu pemrosesan watermarking yang lebih lama, akan tetapi hasil yang didapatkan lebih baik",
                     style: TextStyle(
                       color: Color(0xFFF7F7F7),
                       fontSize: 14,
@@ -411,6 +436,120 @@ class _EmbeddingPageState extends State<EmbeddingPage> {
                         : const SizedBox(),
                   ),
                 ],
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              const Text(
+                "Panjang Bit Kuantum",
+                style: TextStyle(
+                  color: Color(0xFFF7F7F7),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color(0xFF93deff),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(14),
+                        color: const Color(0xFF93deff),
+                      ),
+                      child: DropdownButton<String>(
+                        value: watermarkType1,
+                        items: dropdownItems1.map((String item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(item),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            watermarkType1 = newValue!;
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black,
+                        ),
+                        hint: const Text(
+                          '  Bit Kuantum',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        style: const TextStyle(
+                          color: Colors.black,
+                        ),
+                        dropdownColor: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    const Text(
+                      "Panjang Jumlah Segmentasi",
+                      style: TextStyle(
+                        color: Color(0xFFF7F7F7),
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color(0xFF93deff),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(14),
+                        color: const Color(0xFF93deff),
+                      ),
+                      child: DropdownButton<String>(
+                        value: watermarkType2,
+                        items: dropdownItems2.map((String item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(item),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            watermarkType2 = newValue!;
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black,
+                        ),
+                        hint: const Text(
+                          '  Jumlah Segmentasi',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        style: const TextStyle(
+                          color: Colors.black,
+                        ),
+                        dropdownColor: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 15,

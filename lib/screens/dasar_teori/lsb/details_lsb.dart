@@ -14,6 +14,12 @@ class _DetailLSBState extends State<DetailLSB> {
     'assets/files/lsb1.jpg',
     'assets/files/lsb2.jpg',
     'assets/files/lsb3.jpg',
+    'assets/files/lsb4.jpg',
+    'assets/files/lsb5.jpg',
+    'assets/files/lsb6.jpg',
+    'assets/files/lsb7.jpg',
+    'assets/files/lsb8.jpg',
+    'assets/files/lsb9.jpg',
   ];
 
   void _onPageChanged(int index, CarouselPageChangedReason reason) {

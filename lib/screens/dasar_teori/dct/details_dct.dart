@@ -16,6 +16,21 @@ class _DetailDCTState extends State<DetailDCT> {
     'assets/files/dct3.jpg',
     'assets/files/dct4.jpg',
     'assets/files/dct5.jpg',
+    'assets/files/dct6.jpg',
+    'assets/files/dct7.jpg',
+    'assets/files/dct8.jpg',
+    'assets/files/dct9.jpg',
+    'assets/files/dct10.jpg',
+    'assets/files/dct11.jpg',
+    'assets/files/dct12.jpg',
+    'assets/files/dct13.jpg',
+    'assets/files/dct14.jpg',
+    'assets/files/dct15.jpg',
+    'assets/files/dct16.jpg',
+    'assets/files/dct17.jpg',
+    'assets/files/dct18.jpg',
+    'assets/files/dct19.jpg',
+    'assets/files/dct20.jpg',
   ];
 
   void _onPageChanged(int index, CarouselPageChangedReason reason) {
@@ -73,7 +88,6 @@ class _DetailDCTState extends State<DetailDCT> {
                 enableInfiniteScroll: false,
                 scrollDirection: Axis.vertical,
                 onPageChanged: _onPageChanged,
-                // autoPlay: false,
               ),
               items: imgList
                   .map((item) => Container(
@@ -114,5 +128,3 @@ class OtherPage extends StatelessWidget {
     );
   }
 }
-
-

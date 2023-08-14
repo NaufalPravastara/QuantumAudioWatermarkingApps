@@ -47,12 +47,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     dbRef.child(userID).set(users).then((_) {
       print("Data pengguna berhasil ditambahkan.");
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => EntryPoint()),
-      );
+      _showAlertDialog("Success", "User data added successfully.");
     }).catchError((error) {
       print("Terjadi kesalahan saat menambahkan data pengguna: $error");
+      _showAlertDialog("Error", "An error occurred: $error");
     });
   }
 
@@ -60,59 +58,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (_usernameTextController.text.isEmpty ||
         _emailTextController.text.isEmpty ||
         _passwordTextController.text.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text("Please enter username, email, and password."),
-            actions: [
-              TextButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      _showAlertDialog("Error", "Please enter username, email, and password.");
     } else if (!_isValidEmail(_emailTextController.text)) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context){
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text("Please enter a valid email address."),
-            actions: [
-              TextButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } else if(_passwordTextController.text.length < 6) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context){
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text("Password must be at least six characters."),
-            actions: [
-              TextButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      _showAlertDialog("Error", "Please enter a valid email address.");
+    } else if (_passwordTextController.text.length < 6) {
+      _showAlertDialog("Error", "Password must be at least six characters.");
     } else {
       FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -124,21 +74,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _addUsers(userId ?? '');
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => LogInScreen()),
+          MaterialPageRoute(builder: (context) => const LogInScreen()),
         );
-      }).onError((error, stackTrace) {
+      }).catchError((error) {
         print("Error ${error.toString()}");
+        _showAlertDialog("Error", "An error occurred: ${error.toString()}");
       });
     }
   }
 
   bool _isValidEmail(String email) {
-  //format email
-  final RegExp emailRegex = RegExp(
-    r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$',
-  );
-  return emailRegex.hasMatch(email);
-}
+    final RegExp emailRegex = RegExp(
+      r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$',
+    );
+    return emailRegex.hasMatch(email);
+  }
+
+  void _showAlertDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -183,42 +153,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       height: 20,
                     ),
                     TextFormField(
-                    controller: _passwordTextController,
-                    obscureText: !_showPassword,
-                    cursorColor: Colors.white,
-                    style: TextStyle(color: Colors.white.withOpacity(0.9)),
-                    decoration: InputDecoration(
-                      labelText: "Enter Password",
-                      filled: true,
-                      labelStyle: TextStyle(color: Colors.white.withOpacity(0.9)),
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      fillColor: Colors.grey.withOpacity(0.7),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        borderSide: const BorderSide(
-                          width: 0,
-                          style: BorderStyle.none,
+                      controller: _passwordTextController,
+                      obscureText: !_showPassword,
+                      cursorColor: Colors.white,
+                      style: TextStyle(color: Colors.white.withOpacity(0.9)),
+                      decoration: InputDecoration(
+                        labelText: "Enter Password",
+                        filled: true,
+                        labelStyle:
+                            TextStyle(color: Colors.white.withOpacity(0.9)),
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        fillColor: Colors.grey.withOpacity(0.7),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          borderSide: const BorderSide(
+                            width: 0,
+                            style: BorderStyle.none,
+                          ),
                         ),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.lock_outline,
-                        color: Colors.white,
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _showPassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                              color: Colors.white,
+                        prefixIcon: Icon(
+                          Icons.lock_outline,
+                          color: Colors.white,
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _showPassword = !_showPassword;
-                          });
-                        },
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _showPassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _showPassword = !_showPassword;
+                            });
+                          },
+                        ),
                       ),
                     ),
-                  ),
                     const SizedBox(
                       height: 20,
                     ),

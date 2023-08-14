@@ -21,7 +21,7 @@ class ExtractionPage extends StatefulWidget {
 class _ExtractionPageState extends State<ExtractionPage> {
   TextEditingController controller = TextEditingController();
   PlatformFile? pickedFile1;
-  PlatformFile? pickedFile2;
+  // PlatformFile? pickedFile2;
   UploadTask? uploadTask;
   List<String> dropdownItems1 = [
     'Tanpa Serangan',
@@ -43,7 +43,7 @@ class _ExtractionPageState extends State<ExtractionPage> {
   String? selectedEmbeddingMethod;
   bool showLoading = false;
   bool isFileSelected1 = false;
-  bool isFileSelected2 = false;
+  // bool isFileSelected2 = false;
   bool isKeyVisible = false;
 
   Map<String, String> dropdownMapping1 = {
@@ -82,7 +82,6 @@ class _ExtractionPageState extends State<ExtractionPage> {
         DateFormat('M/d/y, h:mm:ss a').format(now);
 
     if (pickedFile1 == null ||
-        pickedFile2 == null ||
         selectedEmbeddingMethod == null ||
         watermarkType1 == null) {
       showDialog(
@@ -90,7 +89,7 @@ class _ExtractionPageState extends State<ExtractionPage> {
         builder: (context) {
           return AlertDialog(
             content: const Text(
-                "Pilih Metode, Audio Terwatermark, Citra Watermark, Serangan dan Noise terlebih dahulu"),
+                "Pilih Metode, Audio Terwatermark, Serangan dan Noise terlebih dahulu"),
             actions: [
               TextButton(
                 onPressed: () {
@@ -130,7 +129,6 @@ class _ExtractionPageState extends State<ExtractionPage> {
     });
 
     String path1;
-    String path2;
 
     if (watermarkType1 == 'Tanpa Serangan') {
       path1 =
@@ -141,31 +139,14 @@ class _ExtractionPageState extends State<ExtractionPage> {
     }
     final file1 = File(pickedFile1!.path!);
 
-    if (watermarkType1 == 'Tanpa Serangan') {
-      path2 =
-          'file-watermark/${userId}_${selectedEmbeddingMethod}_${newName1}_watermark_$timestamp.${pickedFile2!.extension}';
-    } else {
-      path2 =
-          'file-watermark/${userId}_${selectedEmbeddingMethod}_${newName1}_${newName2}_watermark_$timestamp.${pickedFile2!.extension}';
-    }
-    final file2 = File(pickedFile2!.path!);
-
     final ref1 = FirebaseStorage.instance.ref().child(path1);
     final uploadTask1 = ref1.putFile(file1);
 
-    final ref2 = FirebaseStorage.instance.ref().child(path2);
-    final uploadTask2 = ref2.putFile(file2);
-
     await uploadTask1.whenComplete(() {});
-    await uploadTask2.whenComplete(() {});
 
     final snapshot1 = await ref1.getDownloadURL();
     final urlDownload1 = snapshot1.toString();
     print('Download Link File 1: $urlDownload1');
-
-    final snapshot2 = await ref2.getDownloadURL();
-    final urlDownload2 = snapshot2.toString();
-    print('Download Link File 2: $urlDownload2');
 
     final databaseReference = FirebaseDatabase.instance.ref();
     String probNoiseValue;
@@ -186,16 +167,6 @@ class _ExtractionPageState extends State<ExtractionPage> {
     }
     const ekstrakPath = 'ekstraksi/';
 
-    String watermarkFile;
-    if (watermarkType1 == 'Tanpa Serangan') {
-      watermarkFile =
-          '${userId}_${selectedEmbeddingMethod}_${newName1}_watermark_$timestamp.${pickedFile2!.extension}';
-    } else {
-      watermarkFile =
-          '${userId}_${selectedEmbeddingMethod}_${newName1}_${newName2}_watermark_$timestamp.${pickedFile2!.extension}';
-    }
-    const watermarkPath = 'file-watermark/';
-
     await databaseReference.child('file_terwatermark').child('$timestamp').set({
       'key': inputKey,
       'attack': newName1,
@@ -208,24 +179,8 @@ class _ExtractionPageState extends State<ExtractionPage> {
       'uid': userId,
     });
 
-    await databaseReference
-        .child('file_watermark_ekstrak')
-        .child('$timestamp')
-        .set({
-      'key': inputKey,
-      'attack': newName1,
-      'prob_noise': probNoiseValue,
-      'metode': selectedEmbeddingMethod,
-      'nama_file': watermarkFile,
-      'path_file': watermarkPath,
-      'status': 0,
-      'timestamp': formattedTimestamp,
-      'uid': userId,
-    });
-
     setState(() {
       pickedFile1 = null;
-      pickedFile2 = null;
       selectedEmbeddingMethod = null;
       watermarkType1 = null;
       watermarkType2 = null;
@@ -233,7 +188,7 @@ class _ExtractionPageState extends State<ExtractionPage> {
 
     controller.text = '';
 
-    const loadingDuration = Duration(seconds: 40);
+    const loadingDuration = Duration(seconds: 20);
     Timer(loadingDuration, () {
       setState(() {
         showLoading = false;
@@ -254,39 +209,6 @@ class _ExtractionPageState extends State<ExtractionPage> {
       watermarkType1 = 'Tanpa Serangan';
       isFileSelected1 = true;
     });
-  }
-
-  Future selectFile2() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.any,);
-
-    if (result == null) return;
-
-    final pickedFile = result.files.first;
-    final filePath = pickedFile.path;
-    final fileName = pickedFile.name;
-
-    // Check if the selected file has the desired extension (.mat)
-    if (fileName.toLowerCase().endsWith('.mat')) {
-      setState(() {
-        pickedFile2 = pickedFile;
-        isFileSelected2 = true;
-      });
-    } else {
-      // Show an error message when the selected file doesn't have the desired extension
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Invalid File Format'),
-          content: Text('Please select a file with .mat extension.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
   }
 
   @override
@@ -354,7 +276,7 @@ class _ExtractionPageState extends State<ExtractionPage> {
                 child: const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Proses extraction adalah proses pengambilan kembali citra watermark yang telah disisipkan. Pada proses ini audio hasil embedding akan diubah kembali ke domain kuantum dan dilakukan pengambilan watermark. Pada proses ini juga dapat ditambahkan serangan dengan  tingkat kerusakan yang dapat diatur.",
+                    "Proses ekstraksi adalah proses pengambilan kembali citra watermark yang telah disisipkan. Pada proses ini audio hasil embedding akan diubah kembali ke domain kuantum dan dilakukan pengambilan watermark. Pada proses ini juga dapat ditambahkan serangan dengan  tingkat kerusakan yang dapat diatur.",
                     style: TextStyle(
                       color: Color(0xFFF7F7F7),
                       fontSize: 14,
@@ -472,51 +394,6 @@ class _ExtractionPageState extends State<ExtractionPage> {
                 height: 15,
               ),
               const Text(
-                "File data.mat",
-                style: TextStyle(
-                  color: Color(0xFFF7F7F7),
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      selectFile2();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      backgroundColor: const Color(0xFF93deff),
-                    ),
-                    child: const Text(
-                      "Choose File",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: pickedFile2 != null
-                        ? Text(
-                            _trimFilename(pickedFile2!.name, 30),
-                            style: const TextStyle(color: Colors.white),
-                          )
-                        : const SizedBox(),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Text(
                 "Pilih Serangan",
                 style: TextStyle(
                   color: Color(0xFFF7F7F7),
@@ -572,6 +449,69 @@ class _ExtractionPageState extends State<ExtractionPage> {
                         dropdownColor: Colors.white,
                       ),
                     ),
+                    // if (watermarkType1 == 'Pauli-X')
+                    //   Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       const SizedBox(height: 16),
+                    //       Container(
+                    //         padding: const EdgeInsets.all(10),
+                    //         decoration: BoxDecoration(
+                    //           border: Border.all(
+                    //             color: Colors.white,
+                    //             width: 1.0,
+                    //           ),
+                    //         ),
+                    //         child: const Text(
+                    //           "Pauli-X adalah ",
+                    //           style:
+                    //               TextStyle(color: Colors.white, fontSize: 14),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // if (watermarkType1 == 'Pauli-Z')
+                    //   Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       const SizedBox(height: 16),
+                    //       Container(
+                    //         padding: const EdgeInsets.all(10),
+                    //         decoration: BoxDecoration(
+                    //           border: Border.all(
+                    //             color: Colors.white,
+                    //             width: 1.0,
+                    //           ),
+                    //         ),
+                    //         child: const Text(
+                    //           "Pauli-Z adalah ",
+                    //           style:
+                    //               TextStyle(color: Colors.white, fontSize: 14),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // if (watermarkType1 == 'Pauli-CNOT')
+                    //   Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       const SizedBox(height: 16),
+                    //       Container(
+                    //         padding: const EdgeInsets.all(10),
+                    //         decoration: BoxDecoration(
+                    //           border: Border.all(
+                    //             color: Colors.white,
+                    //             width: 1.0,
+                    //           ),
+                    //         ),
+                    //         child: const Text(
+                    //           "Pauli-CNOT adalah ",
+                    //           style:
+                    //               TextStyle(color: Colors.white, fontSize: 14),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
                     if (watermarkType1 != 'Tanpa Serangan')
                       const SizedBox(
                         height: 16,

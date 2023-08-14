@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ta_capstone/screens/dasar_teori/qwatermark/menu_watermark.dart';
 import 'package:ta_capstone/screens/halaman_testing/teori.dart';
 import 'package:ta_capstone/screens/menu/embedding/embedding.dart';
 import 'package:ta_capstone/screens/menu/extraction/extraction.dart';
@@ -46,6 +47,72 @@ class _HomeScreenState extends State<HomeScreen> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 20),
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (context) => MenuWatermark()));
+                      //     },
+                      //     child: Container(
+                      //       padding: const EdgeInsets.symmetric(
+                      //           horizontal: 16, vertical: 24),
+                      //       height: 280,
+                      //       width: 260,
+                      //       decoration: const BoxDecoration(
+                      //         color: Color(0xFF93deff),
+                      //         borderRadius:
+                      //             BorderRadius.all(Radius.circular(20)),
+                      //       ),
+                      //       child: Row(
+                      //         crossAxisAlignment: CrossAxisAlignment.start,
+                      //         children: [
+                      //           Expanded(
+                      //             child: Column(
+                      //               crossAxisAlignment:
+                      //                   CrossAxisAlignment.start,
+                      //               children: [
+                      //                 Text("Quantum Audio Watermarking",
+                      //                     style: Theme.of(context)
+                      //                         .textTheme
+                      //                         .titleLarge!
+                      //                         .copyWith(
+                      //                             color: Colors.black,
+                      //                             fontWeight: FontWeight.w600)),
+                      //                 const Padding(
+                      //                   padding:
+                      //                       EdgeInsets.only(top: 12, bottom: 8),
+                      //                   child: Align(
+                      //                     alignment: Alignment.centerLeft,
+                      //                     child: Text(
+                      //                       "Watermarking adalah teknik yang memungkinkan untuk menyisipkan informasi rahasia atau pengenal ke dalam data digital dengan cara yang tidak terlihat oleh mata manusia secara kasat mata.",
+                      //                       style:
+                      //                           TextStyle(color: Colors.black),
+                      //                       textAlign: TextAlign.justify,
+                      //                     ),
+                      //                   ),
+                      //                 ),
+                      //                 const SizedBox(
+                      //                   height: 29,
+                      //                 ),
+                      //                 const Text(
+                      //                   "Tap to see details >>>",
+                      //                   style: TextStyle(color: Colors.black),
+                      //                 ),
+                      //               ],
+                      //             ),
+                      //           ),
+                      //           Image.asset("assets/images/profile_img.png"),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(
+                      //   width: 5,
+                      // ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
                         child: GestureDetector(

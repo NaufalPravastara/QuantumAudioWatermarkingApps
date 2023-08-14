@@ -67,6 +67,8 @@ dependencies:
   mime_type: ^1.0.0
   http: ^0.13.5
   intl: ^0.18.1
+  url_launcher: ^6.1.11
+  photo_view: ^0.14.0
 
 dev_dependencies:
   flutter_test:
@@ -96,22 +98,64 @@ flutter:
     - assets/files/lsb1.jpg
     - assets/files/lsb2.jpg
     - assets/files/lsb3.jpg
+    - assets/files/lsb4.jpg
+    - assets/files/lsb5.jpg
+    - assets/files/lsb6.jpg
+    - assets/files/lsb7.jpg
+    - assets/files/lsb8.jpg
+    - assets/files/lsb9.jpg
     - assets/files/dct1.jpg
     - assets/files/dct2.jpg
     - assets/files/dct3.jpg
     - assets/files/dct4.jpg
     - assets/files/dct5.jpg
+    - assets/files/dct6.jpg
+    - assets/files/dct7.jpg
+    - assets/files/dct8.jpg
+    - assets/files/dct9.jpg
+    - assets/files/dct10.jpg
+    - assets/files/dct11.jpg
+    - assets/files/dct12.jpg
+    - assets/files/dct13.jpg
+    - assets/files/dct14.jpg
+    - assets/files/dct15.jpg
+    - assets/files/dct16.jpg
+    - assets/files/dct17.jpg
+    - assets/files/dct18.jpg
+    - assets/files/dct19.jpg
+    - assets/files/dct20.jpg
     - assets/files/w1.jpg
     - assets/files/w2.jpg
     - assets/files/w3.jpg
     - assets/files/w4.jpg
     - assets/files/w5.jpg
+    - assets/files/w6.jpg
+    - assets/files/w7.jpg
+    - assets/files/w8.jpg
+    - assets/files/w9.jpg
+    - assets/files/w10.jpg
+    - assets/files/w11.jpg
+    - assets/files/w12.jpg
+    - assets/files/w13.jpg
+    - assets/files/w14.jpg
+    - assets/files/w15.jpg
+    - assets/files/w16.jpg
+    - assets/files/w17.jpg
+    - assets/files/w18.jpg
+    - assets/files/w19.jpg
+    - assets/files/w20.jpg
+    - assets/files/w21.jpg
+    - assets/files/quantum1.jpg
+    - assets/files/quantum2.jpg
+    - assets/files/quantum3.jpg
+    - assets/files/quantum4.jpg
     - assets/RiveAssets/
     - assets/RiveAssets/menu_button.riv
     - assets/images/log.png
     - assets/images/wallpaper.png
     - assets/images/quiz.png
     - assets/images/teori.png
+    - assets/images/computer.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -79,7 +79,6 @@ class _HasilEmbedState extends State<HasilEmbed> {
   Future<void> downloadAudio() async {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      // If the user is not logged in, show a message and return
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:
@@ -93,30 +92,25 @@ class _HasilEmbedState extends State<HasilEmbed> {
         'hasil-embedding/${userId}_terwatermark/watermarked_audio.wav';
 
     try {
-      // Referensi ke file di Firebase Storage
       firebase_storage.Reference ref =
           firebase_storage.FirebaseStorage.instance.ref().child(_filePath);
 
-      // Mendapatkan metadata file dari Firebase Storage
       final metadata = await ref.getMetadata();
 
       // Mendapatkan nama file dari metadata
       String filename =
-          metadata.name; // Jika metadata.name null, gunakan 'default_audio.wav'
+          metadata.name;
 
       // Mendownload file ke perangkat dengan nama sesuai di Firebase Storage
       File file = File('/storage/emulated/0/Download/$filename');
       await ref.writeToFile(file);
 
-      // Mendapatkan timestamp saat ini
       String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
 
       // Ganti nama file setelah didownload
       String newFileName = 'watermarked_audio_$timestamp.wav';
       File renamedFile =
           await file.rename('/storage/emulated/0/Download/$newFileName');
-
-      // Tampilkan pesan jika download berhasil
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
@@ -129,7 +123,6 @@ class _HasilEmbedState extends State<HasilEmbed> {
         ),
       );
     } catch (e) {
-      // Tampilkan pesan jika terjadi kesalahan
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Terjadi kesalahan saat mendownload file.'),
@@ -154,68 +147,6 @@ class _HasilEmbedState extends State<HasilEmbed> {
         newMatFileUrl = null;
       });
       print('Error loading new .mat file: $e');
-    }
-  }
-
-  Future<void> downloadAndSaveMatFile() async {
-    final User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      // If the user is not logged in, show a message and return
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content:
-              Text('Anda harus masuk terlebih dahulu untuk mendownload file.'),
-        ),
-      );
-      return;
-    }
-
-    String userId = user.uid;
-    String _filePath = 'hasil-embedding/${userId}_terwatermark/data.mat';
-
-    try {
-      // Referensi ke file di Firebase Storage
-      firebase_storage.Reference ref =
-          firebase_storage.FirebaseStorage.instance.ref().child(_filePath);
-
-      // Mendapatkan metadata file dari Firebase Storage
-      final metadata = await ref.getMetadata();
-
-      // Mendapatkan nama file dari metadata
-      String filename =
-          metadata.name; // Jika metadata.name null, gunakan 'default_audio.wav'
-
-      // Mendownload file ke perangkat dengan nama sesuai di Firebase Storage
-      File file = File('/storage/emulated/0/Download/$filename');
-      await ref.writeToFile(file);
-
-      // Mendapatkan timestamp saat ini
-      String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-
-      // Ganti nama file setelah didownload
-      String newFileName = 'data_$timestamp.mat';
-      File renamedFile =
-          await file.rename('/storage/emulated/0/Download/$newFileName');
-
-      // Tampilkan pesan jika download berhasil
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(width: 10),
-              Text('Downloading data.mat'),
-            ],
-          ),
-        ),
-      );
-    } catch (e) {
-      // Tampilkan pesan jika terjadi kesalahan
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Terjadi kesalahan saat mendownload file.'),
-        ),
-      );
     }
   }
 
@@ -277,25 +208,11 @@ class _HasilEmbedState extends State<HasilEmbed> {
                 ),
                 _buildAudioPlayer(),
                 const SizedBox(
-                  height: 15,
-                ),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: downloadAndSaveMatFile,
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF93deff)),
-                    child: const Text(
-                      'Unduh .mat File',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
-                const SizedBox(
                   height: 20,
                 ),
                 const Center(
                   child: Text(
-                    "SNR",
+                    "SNR (dB)",
                     style: TextStyle(
                       color: Color(0xFFF7F7F7),
                       fontSize: 22,
@@ -333,7 +250,6 @@ class _HasilEmbedState extends State<HasilEmbed> {
                         ),
                       );
                     } else {
-                      // No data available, return the text here
                       return const Text(
                         'No data available',
                         style: TextStyle(color: Colors.white),

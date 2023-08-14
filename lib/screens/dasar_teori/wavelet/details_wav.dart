@@ -16,6 +16,22 @@ class _DetailWavState extends State<DetailWav> {
     'assets/files/w3.jpg',
     'assets/files/w4.jpg',
     'assets/files/w5.jpg',
+    'assets/files/w6.jpg',
+    'assets/files/w7.jpg',
+    'assets/files/w8.jpg',
+    'assets/files/w9.jpg',
+    'assets/files/w10.jpg',
+    'assets/files/w11.jpg',
+    'assets/files/w12.jpg',
+    'assets/files/w13.jpg',
+    'assets/files/w14.jpg',
+    'assets/files/w15.jpg',
+    'assets/files/w16.jpg',
+    'assets/files/w17.jpg',
+    'assets/files/w18.jpg',
+    'assets/files/w19.jpg',
+    'assets/files/w20.jpg',
+    'assets/files/w21.jpg',
   ];
 
   void _onPageChanged(int index, CarouselPageChangedReason reason) {
